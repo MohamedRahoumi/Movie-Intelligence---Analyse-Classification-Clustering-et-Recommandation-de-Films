@@ -1,0 +1,149 @@
+Movie Intelligence - Analyse, Classification, Clustering et Recommandation de Films
+
+Analyse intelligente d’un catalogue de films avec **classification, clustering, TF-IDF et recommandation** à partir de données TMDB.
+
+Contexte du projet
+Contexte du projet
+Une plateforme de contenus souhaite exploiter son catalogue de films afin de mieux comprendre ses données, identifier des profils de films et proposer des recommandations.
+
+Les données seront extraites automatiquement depuis l’API publique TMDB. Elles combinent données structurées (notes, durée, date, genres...) et textuelles (titres, synopsis, mots-clés).
+
+Source des données
+Utiliser l’API TMDB avec une extraction automatisée en Python.
+
+L’extraction devra gérer :
+
+authentification et variables d’environnement ;
+pagination ;
+erreurs HTTP et réponses vides ;
+limitation éventuelle des requêtes ;
+sauvegarde des données brutes.
+Une extraction de 1 000 à 3 000 films est recommandée. Les données brutes devront être conservées localement afin d’éviter de solliciter inutilement l’API.
+
+Objectif métier
+La solution devra répondre à trois problématiques :
+
+Classification : prédire si un film appartient à une catégorie de films à fort engagement.
+
+Clustering : identifier automatiquement des groupes de films similaires.
+
+Recommandation : proposer des films similaires à partir de leur contenu textuel.
+
+Étape 1 — Extraction et préparation
+Développer un module Python avec Requests ou équivalent.
+
+Récupérer notamment :
+
+movie_id, title, overview, release_date, runtime, original_language, genres, keywords, budget, revenue, popularity, vote_average, vote_count.
+
+Sauvegarder les réponses JSON dans data/raw/.
+
+Étape 2 — Nettoyage et stockage
+Transformer les données avec Pandas :
+
+analyse des types et structures ;
+valeurs manquantes et doublons ;
+détection des incohérences ;
+conversion des dates ;
+séparation des variables numériques, catégorielles et textuelles.
+Stocker également les films dans MongoDB.
+
+Réaliser plusieurs requêtes MongoDB et au moins une agrégation utilisant $match, $group, $sort, $project ou $unwind.
+
+Étape 3 — EDA et visualisation
+Réaliser une analyse avec Pandas, Matplotlib et Seaborn.
+
+Produire des visualisations pertinentes :
+
+distribution des notes et popularités ;
+films par genre ;
+sorties par année ;
+durée ;
+budget/revenus ;
+votes/popularité ;
+boxplots et corrélations.
+Chaque graphique devra être accompagné d’une courte interprétation.
+
+Étape 4 — Feature Engineering
+Créer des variables telles que :
+
+année, mois et décennie ;
+nombre de genres et de mots-clés ;
+catégories de durée ;
+autres indicateurs pertinents.
+Justifier les variables créées et éviter tout Data Leakage.
+
+Étape 5 — NLP avec TF-IDF
+Exploiter overview avec :
+
+nettoyage du texte ;
+traitement des valeurs manquantes ;
+TfidfVectorizer ;
+expérimentation de max_features et ngram_range.
+Analyser les dimensions de la matrice et les termes représentatifs.
+
+Étape 6 — Classification
+Créer high_engagement à partir d’un indicateur comme vote_count, avec un seuil justifié.
+
+Important : la variable utilisée pour créer la cible ne doit pas être utilisée comme feature.
+
+Comparer au minimum 3 modèles :
+
+Logistic Regression ;
+Random Forest ;
+Linear SVM.
+Utiliser Pipeline et ColumnTransformer si nécessaire.
+
+Évaluer avec Accuracy, Precision, Recall, F1-score, ROC-AUC et matrice de confusion.
+
+Étape 7 — Validation et optimisation
+Utiliser StratifiedKFold avec cross_validate.
+
+Appliquer GridSearchCV sur au moins un modèle afin de tester une grille d’hyperparamètres et comparer les résultats avant/après optimisation.
+
+Étape 8 — Clustering
+Réaliser un clustering avec K-Means à partir de variables structurées et/ou TF-IDF.
+
+Tester plusieurs valeurs de K et utiliser le Silhouette Score.
+
+Interpréter les caractéristiques des clusters.
+
+Pour la visualisation du TF-IDF, utiliser éventuellement TruncatedSVD en 2D.
+
+Étape 9 — Recommandation (Bonus)
+Construire un système content-based :
+
+sélectionner un film ;
+récupérer son vecteur TF-IDF ;
+calculer la similarité cosinus ;
+retourner les 5 films les plus similaires.
+Afficher titre, genre, année et score de similarité.
+
+Étape 10 — Intégration
+Créer une application Streamlit présentant :
+
+dashboard et visualisations ;
+classification ;
+clusters ;
+recommandations.
+Automatiser avec
+Airflow
+:
+Extraction → Nettoyage → Features → MongoDB → ML
+
+Conteneuriser avec
+Docker
+.
+Sauvegarder les modèles et objets de prétraitement avec joblib afin d’éviter leur réentraînement dans Streamlit.
+
+Organisation conseillée sur 10 jours
+J1 | API + authentification + extraction + Raw JSON
+J2 | Nettoyage + structuration + MongoDB
+J3 | EDA + visualisation + Feature Engineering
+J4 | NLP + TF-IDF
+J5 | Classification + 3 modèles
+J6 | Cross-Validation + GridSearchCV
+J7 | K-Means + Silhouette Score
+J8 | Cosine Similarity + recommandation
+J9 | Airflow + Docker + intégration
+J10 | Streamlit + tests + finalisation

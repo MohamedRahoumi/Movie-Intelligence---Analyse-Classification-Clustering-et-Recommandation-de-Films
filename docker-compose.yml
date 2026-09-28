@@ -1,0 +1,31 @@
+services:
+
+  app:
+    build: .
+    container_name: tmdb_app
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:7
+    container_name: tmdb_mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    volumes:
+      - mongodb_data:/data/db
+
+  compooss:
+    image: abdullahmia/compooss:latest
+    container_name: tmdb_compooss
+    ports:
+      - "6969:3000"
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
